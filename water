@@ -1,0 +1,68 @@
+#!/bin/sh
+##############################
+#
+# Home irrigation rain delay & manual pause tool
+#
+# Raspberry Pi B+
+# SainSmart 2-Channel Relay Module on RPi pin 7
+# uses "wiringPi" from https://projects.drogon.net/raspberry-pi/wiringpi/
+#
+# presence@irev.net
+#
+##############################
+
+usage() {
+	echo "Pause or restart irrigation schedule"
+	echo "Usage:"
+	echo "\t water status"
+	echo "\t water off"
+	echo "\t water on"
+}
+
+if [ -n "$1" ]; then
+	while [ "$1" != "" ]; do
+		case $1 in
+			on)
+				# set pin 5 on RPi to high, releasing the relay open for normal irrigation
+				/usr/local/bin/gpio -g mode 5 out
+				/usr/local/bin/gpio -g mode 5 up
+				/usr/local/bin/gpio -g write 5 1
+				echo "Watering schedule running normally"
+				exit
+				;;
+			off)
+				# set pin 5 on RPi to low, closing the relay to stop irrigation
+				/usr/local/bin/gpio -g mode 5 out
+				/usr/local/bin/gpio -g mode 5 up
+				/usr/local/bin/gpio -g write 5 0
+				echo "Watering schedule paused"
+				exit
+				;;
+			status)
+				status=`/usr/local/bin/gpio -g read 5`
+				case $status in
+					0)
+						echo "Paused"
+						exit
+						;;
+					1)
+						echo "Running"
+						exit
+						;;
+				esac
+				;;
+			*)
+				usage
+				exit 1
+				;;
+			esac
+			shift
+		done
+	else
+		usage
+		exit 1
+fi
+	
+
+
+			
