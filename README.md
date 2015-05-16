@@ -1,4 +1,4 @@
-# Home irrigation rain delay & manual pause tool
+## Home irrigation rain delay & manual pause tool
 
 * Raspberry Pi B+
 * SainSmart 2-Channel Relay Module on RPi pin 7
